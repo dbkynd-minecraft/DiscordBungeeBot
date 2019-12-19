@@ -37,7 +37,6 @@ public class AddMeCommand implements Command {
 
             if (bot.getSQL().itemExists("DiscordID", event.getAuthor().getId(), bot.getTableName())) {
                 bot.getSQL().set("MinecraftName", name.toLowerCase(), "DiscordID", "=", event.getAuthor().getId(), bot.getTableName());
-                bot.getSQL().set("UUID", null, "DiscordID", "=", event.getAuthor().getId(), bot.getTableName());
             } else {
                 bot.getSQL().update("INSERT INTO " + bot.getTableName() + " (DiscordID,MinecraftName) VALUES (\'" + event.getAuthor().getId() + "\',\'" + name.toLowerCase() + "\');");
             }

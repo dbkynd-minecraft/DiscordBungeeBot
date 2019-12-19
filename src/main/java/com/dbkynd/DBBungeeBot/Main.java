@@ -65,7 +65,7 @@ public class Main extends Plugin {
         // Create table if does not exist
         if (!sql.tableExists(sqltable)) {
             log(Level.INFO, "Table not found. Creating new table...");
-            sql.update("CREATE TABLE " + sqltable + " (DiscordID CHAR(18), MinecraftName VARCHAR(16), UUID CHAR(36), PRIMARY KEY (DiscordID));");
+            sql.update("CREATE TABLE " + sqltable + " (DiscordID CHAR(18), MinecraftName VARCHAR(16), PRIMARY KEY (DiscordID));");
             // Ensure table was created before saying so
             if (sql.tableExists(sqltable)) {
                 log(Level.INFO, "Table created!");
@@ -163,100 +163,22 @@ public class Main extends Plugin {
         return requiredrole;
     }
 
-    public User getDiscordUser(ProxiedPlayer p) {
-        String name = p.getName().toLowerCase();
+    public String isRegistered(String name) {
         ArrayList<String> ids = new ArrayList<String>();
-        ResultSet rs = sql.query("SELECT * FROM " + sqltable + " HAVING MinecraftName = " + "\'" + name.toLowerCase() + "\';");
-        try {
-            while (rs.next()) {
-                ids.add(rs.getString("DiscordID"));
-            }
-        } catch (SQLException e) {
-            log(Level.SEVERE, "Error getting Discord IDs from database!");
-            e.printStackTrace();
-        }
-        for (String id : ids) {
-            User user = bot.getJDA().getUserById(id);
-            if (user != null) {
-                for (Guild guild : bot.getJDA().getGuilds()) {
-                    if (guild.isMember(user)) {
-                        return user;
-                    }
+        ResultSet rs;
+
+        if (sql.itemExists("MinecraftName", name, sqltable)) {
+            rs = sql.query("SELECT * FROM " + sqltable + " HAVING MinecraftName = " + "\'" + name.toLowerCase() + "\';");
+            try {
+                while (rs.next()) {
+                    ids.add( rs.getString("DiscordID"));
                 }
+                if (ids.size() > 0) return ids.get(0);
+            } catch (SQLException e) {
+                log(Level.SEVERE, "Error getting Discord IDs from database!");
+                e.printStackTrace();
             }
         }
         return null;
-    }
-
-    public boolean isMember(String name, String uuid) {
-        ArrayList<String> ids = new ArrayList<String>();
-        ResultSet rs;
-        // See if the player logging in is registered in the database
-        if (sql.itemExists("MinecraftName", name, sqltable)) {
-            rs = sql.query("SELECT * FROM " + sqltable + " HAVING MinecraftName = " + "\'" + name.toLowerCase() + "\';");
-            // Add all the Discord IDs that match the MC IGN name into the array
-            try {
-                while (rs.next()) {
-                    String tempid = rs.getString("DiscordID");
-                    ids.add(tempid);
-                }
-            } catch (SQLException e) {
-                log(Level.SEVERE, "Error getting Discord IDs from database!");
-                e.printStackTrace();
-            }
-            // Loop through Discord UserIds
-            for (String id : ids) {
-                // Get the user from cache
-                User user = bot.getJDA().getUserById(id);
-                if (user != null) {
-                    // If the user is a current member of any of the Guilds the client is in
-                    // update the database record with their UUID
-                    for (Guild guild : bot.getJDA().getGuilds()) {
-                        if (guild.isMember(user)) {
-                            sql.update("UPDATE " + sqltable + " SET UUID = " + "\'" + uuid + "\'" + " WHERE DiscordID = " + "\'" + id + "\';");
-                            // isMember true
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // The user might of changed their MinecraftName
-        // check for a matching UUID and update the name if there is a match
-
-        if (sql.itemExists("UUID", uuid, sqltable)) {
-            ids = new ArrayList<String>();
-            rs = sql.query("SELECT * FROM " + sqltable + " WHERE UUID = " + "\'" + uuid + "\';");
-            // Add all the Discord IDs that match the MC UUID into the array
-            try {
-                while (rs.next()) {
-                    ids.add(rs.getString("DiscordID"));
-                }
-            } catch (SQLException e) {
-                log(Level.SEVERE, "Error getting Discord IDs from database!");
-                e.printStackTrace();
-            }
-            // Loop through Discord UserIds
-            for (String id : ids) {
-                // Get the user from cache
-                User user = bot.getJDA().getUserById(id);
-                // If the user is a current member of any of the Guilds the client is in
-                // update the database record with their MinecraftName
-                if (user != null) {
-                    for (Guild guild : bot.getJDA().getGuilds()) {
-                        if (guild.isMember(user)) {
-                            sql.update("UPDATE " + sqltable + " SET MinecraftName = " + "\'" + name.toLowerCase() + "\'" + " WHERE DiscordID = " + "\'" + id + "\';");
-                            // isMember true
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        // isMember false
-        // No matching names or UUIDs in the database
-        return false;
     }
 }
