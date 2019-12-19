@@ -9,11 +9,11 @@ TableName: dbbungeebot
 # Create a Discord Application and add a 'BOT' user to get your bot token
 # https://discordapp.com/developers/applications/
 BotToken: discord_bot_token
-# Enclose the prefix in parentheses ""
+# Enclose the prefix in parentheses "!" as some common command prefixes are considered special characters
 CommandPrefix: "!"
 AddMeCommand: addme
 
-# IF CheckRole is true a joining player MUST have the RequiredRole to be able to join
+# If CheckRole is true a joining player MUST have the RequiredRole to be able to join
 # If CheckRole is false the player will still needs to be a member of the Discord to be able to join
 CheckRole: true
 RequiredRole: Twitch Subscriber
