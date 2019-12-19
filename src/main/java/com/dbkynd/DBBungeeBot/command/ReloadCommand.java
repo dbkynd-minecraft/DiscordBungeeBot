@@ -19,9 +19,9 @@ public class ReloadCommand extends Command {
     public void execute(CommandSender commandSender, String[] args) {
         try {
             plugin.loadConfig();
-            commandSender.sendMessage(new TextComponent(ChatColor.GOLD + "[DBBungeeBot]: " + ChatColor.RESET + "The config.yml file has been reloaded."));
+            commandSender.sendMessage(new TextComponent("[" + ChatColor.GOLD + "DBBungeeBot" + ChatColor.RESET + "]: The config.yml file has been reloaded."));
         } catch (Exception e) {
-            commandSender.sendMessage(new TextComponent(ChatColor.GOLD + "[DBBungeeBot]: " + ChatColor.RED + "There was an error reloading the config.yml file."));
+            commandSender.sendMessage(new TextComponent("[" + ChatColor.GOLD + "DBBungeeBot" + ChatColor.RESET + "]: " + ChatColor.RED + "There was an error reloading the config.yml file."));
         }
     }
 }

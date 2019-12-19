@@ -1,5 +1,6 @@
 package com.dbkynd.DBBungeeBot.listener;
 
+import com.dbkynd.DBBungeeBot.permissions.LuckPermissions;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -10,13 +11,15 @@ import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 import com.dbkynd.DBBungeeBot.Main;
 
 public class PostLoginListener implements Listener {
 
-    private Main plugin;
+    Main plugin;
+    LuckPermissions luck = new LuckPermissions();
 
     public PostLoginListener(Main plugin) {
         this.plugin = plugin;
@@ -25,6 +28,13 @@ public class PostLoginListener implements Listener {
     @EventHandler
     public void onPreLogin(PreLoginEvent event) {
         String name = event.getConnection().getName();
+
+        UUID uuid = UUID.fromString("5234f96a-7f8e-434c-a8fa-eef6993e07dd");
+
+        if (luck.hasPermission(uuid, "dbbungeebot.bypass")) {
+            plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
+            return;
+        }
 
         String discordId = plugin.isRegistered(name);
 
@@ -56,7 +66,8 @@ public class PostLoginListener implements Listener {
             }
         }
 
-        event.setCancelReason(new TextComponent(ChatColor.RED + plugin.getKickMessage()));
+        plugin.log(Level.INFO, name + " attempted to connect but is not registered.");
+        event.setCancelReason(new TextComponent(ChatColor.GOLD + plugin.getKickMessage()));
         event.setCancelled(true);
     }
 }
