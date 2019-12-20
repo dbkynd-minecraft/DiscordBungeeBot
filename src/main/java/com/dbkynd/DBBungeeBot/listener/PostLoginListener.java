@@ -32,6 +32,7 @@ public class PostLoginListener implements Listener {
     public void onPreLogin(PreLoginEvent event) {
         String name = event.getConnection().getName();
 
+        // Check our own database for a Discord registered user record
         UserRecord userRecord = plugin.getRegistered(name);
 
         if (userRecord != null) {
@@ -59,21 +60,36 @@ public class PostLoginListener implements Listener {
                     }
                 }
             }
-        } else {
-            // Our own database has no record of the user
-            // Hit the Mojang API and see if they have bypass permissions
-            MojangJSON mojangJSON = webRequest.getMojangData(name);
-
-            if (mojangJSON != null) {
-                if (luck.hasPermission(mojangJSON.getUUID(), "dbbungeebot.bypass")) {
-                    plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
-                    return;
-                }
-            }
         }
 
+        // See if the player has bypass permissions via the lucKPerm api
+        if (hasLuckPerms(name)) {
+            plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
+            return;
+        }
+
+        // No checks have passed
+        // Kick the connecting player
         plugin.log(Level.INFO, name + " attempted to connect but is not registered.");
         event.setCancelReason(new TextComponent(ChatColor.GOLD + plugin.getKickMessage()));
         event.setCancelled(true);
+    }
+
+    private boolean hasLuckPerms(String name) {
+        // Hit the Mojang API for the UUID and see if they have bypass permissions
+        // as LuckPerms can't do a reliable name lookup with the user in a not quite
+        // online / offline state
+        MojangJSON mojangJSON = webRequest.getMojangData(name);
+
+        if (mojangJSON != null) {
+            if (luck.hasPermission(mojangJSON.getUUID(), "dbbungeebot.bypass")) {
+                return true;
+            }
+            if (luck.hasPermission(mojangJSON.getUUID(), "dbbungeebot.*")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
