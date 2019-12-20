@@ -15,7 +15,7 @@ public class LuckPermissions {
 
     LuckPerms luckApi;
 
-    public boolean hasPermission(String uuid, String permission) {
+    public boolean hasPermission(UUID uuid, String permission) {
         // Connect to the LuckPerms API
         try {
             luckApi = LuckPermsProvider.get();
@@ -26,7 +26,7 @@ public class LuckPermissions {
         if (luckApi == null) return false;
 
         // Get the LuckPerms User
-        User user = getUser(UUID.fromString(uuid));
+        User user = getUser(uuid);
         if (user == null) return false;
 
         // Get the permission data cache for the user

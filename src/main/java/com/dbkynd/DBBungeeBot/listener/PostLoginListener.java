@@ -1,5 +1,7 @@
 package com.dbkynd.DBBungeeBot.listener;
 
+import com.dbkynd.DBBungeeBot.http.WebRequest;
+import com.dbkynd.DBBungeeBot.mojang.MojangJSON;
 import com.dbkynd.DBBungeeBot.sql.UserRecord;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -20,6 +22,7 @@ public class PostLoginListener implements Listener {
 
     Main plugin;
     LuckPermissions luck = new LuckPermissions();
+    WebRequest webRequest = new WebRequest();
 
     public PostLoginListener(Main plugin) {
         this.plugin = plugin;
@@ -32,12 +35,6 @@ public class PostLoginListener implements Listener {
         UserRecord userRecord = plugin.getRegistered(name);
 
         if (userRecord != null) {
-
-            if (luck.hasPermission(userRecord.getUUID(), "dbbungeebot.bypass")) {
-                plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
-                return;
-            }
-
             // Return if the player is a member and we are not checking roles
             if (!plugin.checkRole()) {
                 plugin.log(Level.INFO, "[" + name + "] is a registered member.");
@@ -60,6 +57,17 @@ public class PostLoginListener implements Listener {
                         plugin.log(Level.INFO, "[" + name + "] has the role: '" + role.getName() + "'.");
                         return;
                     }
+                }
+            }
+        } else {
+            // Our own database has no record of the user
+            // Hit the Mojang API and see if they have bypass permissions
+            MojangJSON mojangJSON = webRequest.getMojangData(name);
+
+            if (mojangJSON != null) {
+                if (luck.hasPermission(mojangJSON.getUUID(), "dbbungeebot.bypass")) {
+                    plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
+                    return;
                 }
             }
         }
