@@ -1,9 +1,7 @@
 package com.dbkynd.DBBungeeBot;
 
 import com.dbkynd.DBBungeeBot.command.ReloadCommand;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.dbkynd.DBBungeeBot.sql.UserRecord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -15,7 +13,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +62,7 @@ public class Main extends Plugin {
         // Create table if does not exist
         if (!sql.tableExists(sqltable)) {
             log(Level.INFO, "Table not found. Creating new table...");
-            sql.update("CREATE TABLE " + sqltable + " (DiscordID CHAR(18), MinecraftName VARCHAR(16), PRIMARY KEY (DiscordID));");
+            sql.update("CREATE TABLE " + sqltable + " (DiscordID CHAR(18), MinecraftName VARCHAR(16), UUID CHAR(36), PRIMARY KEY (DiscordID));");
             // Ensure table was created before saying so
             if (sql.tableExists(sqltable)) {
                 log(Level.INFO, "Table created!");
@@ -163,19 +160,19 @@ public class Main extends Plugin {
         return requiredrole;
     }
 
-    public String isRegistered(String name) {
-        ArrayList<String> ids = new ArrayList<String>();
+    public UserRecord getRegistered(String name) {
         ResultSet rs;
 
         if (sql.itemExists("MinecraftName", name, sqltable)) {
             rs = sql.query("SELECT * FROM " + sqltable + " HAVING MinecraftName = " + "\'" + name.toLowerCase() + "\';");
             try {
-                while (rs.next()) {
-                    ids.add( rs.getString("DiscordID"));
-                }
-                if (ids.size() > 0) return ids.get(0);
+                rs.next();
+                String discordId = rs.getString("DiscordID");
+                String minecraftName = rs.getString("MinecraftName");
+                String uuid = rs.getString("UUID");
+                return new UserRecord(discordId, minecraftName, uuid);
             } catch (SQLException e) {
-                log(Level.SEVERE, "Error getting Discord IDs from database!");
+                log(Level.SEVERE, "Error getting user data from database!");
                 e.printStackTrace();
             }
         }

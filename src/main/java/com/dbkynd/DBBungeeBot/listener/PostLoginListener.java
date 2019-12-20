@@ -1,6 +1,6 @@
 package com.dbkynd.DBBungeeBot.listener;
 
-import com.dbkynd.DBBungeeBot.permissions.LuckPermissions;
+import com.dbkynd.DBBungeeBot.sql.UserRecord;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -11,9 +11,9 @@ import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.UUID;
 import java.util.logging.Level;
 
+import com.dbkynd.DBBungeeBot.permissions.LuckPermissions;
 import com.dbkynd.DBBungeeBot.Main;
 
 public class PostLoginListener implements Listener {
@@ -29,16 +29,14 @@ public class PostLoginListener implements Listener {
     public void onPreLogin(PreLoginEvent event) {
         String name = event.getConnection().getName();
 
-        UUID uuid = UUID.fromString("5234f96a-7f8e-434c-a8fa-eef6993e07dd");
+        UserRecord userRecord = plugin.getRegistered(name);
 
-        if (luck.hasPermission(uuid, "dbbungeebot.bypass")) {
-            plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
-            return;
-        }
+        if (userRecord != null) {
 
-        String discordId = plugin.isRegistered(name);
-
-        if (discordId != null) {
+            if (luck.hasPermission(userRecord.getUUID(), "dbbungeebot.bypass")) {
+                plugin.log(Level.INFO, "[" + name + "] has bypass permissions.");
+                return;
+            }
 
             // Return if the player is a member and we are not checking roles
             if (!plugin.checkRole()) {
@@ -55,7 +53,7 @@ public class PostLoginListener implements Listener {
                     }
                 }
 
-                User user = plugin.getBot().getJDA().getUserById(discordId);
+                User user = plugin.getBot().getJDA().getUserById(userRecord.getDiscordId());
                 if (user != null && user.getMutualGuilds().contains(guild)) {
                     Member mem = guild.getMember(user);
                     if (mem != null && role != null && mem.getRoles().contains(role)) {
