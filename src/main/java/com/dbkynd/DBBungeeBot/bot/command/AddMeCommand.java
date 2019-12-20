@@ -60,7 +60,8 @@ public class AddMeCommand implements Command {
             // Save to database
             try {
                 if (bot.getSQL().itemExists("DiscordID", event.getAuthor().getId(), bot.getTableName())) {
-                    bot.getSQL().set("(MinecraftName,UUID)", "(" + mojang.getName().toLowerCase() + "," + mojang.getUUID() + ")", "DiscordID", "=", event.getAuthor().getId(), bot.getTableName());
+                    bot.getSQL().set("MinecraftName", mojang.getName().toLowerCase(), "DiscordID", "=", event.getAuthor().getId(), bot.getTableName());
+                    bot.getSQL().set("UUID", mojang.getUUID(), "DiscordID", "=", event.getAuthor().getId(), bot.getTableName());
                 } else {
                     bot.getSQL().update("INSERT INTO " + bot.getTableName() + " (DiscordID,MinecraftName,UUID) VALUES (\'" + event.getAuthor().getId() + "\',\'" + mojang.getName().toLowerCase() + "\',\'" + mojang.getUUID().toString() + "\');");
                 }
