@@ -35,7 +35,7 @@ public class Main extends Plugin {
     private String commandprefix;
     private String addmecommand;
     private boolean checkrole = false;
-    private String requiredrole;
+    private String requiredroleid;
     private String kickmsg;
 
     /* END OF CONFIG.YML VARIABLES */
@@ -111,7 +111,7 @@ public class Main extends Plugin {
             sqltable = config.getString("TableName");
             bottoken = config.getString("BotToken");
             checkrole = config.getBoolean("CheckRole");
-            requiredrole = config.getString("RequiredRole");
+            requiredroleid = config.getString("RequiredRoleId");
             kickmsg = config.getString("KickMessage");
             addmecommand = config.getString("AddMeCommand");
             commandprefix = config.getString("CommandPrefix");
@@ -156,8 +156,8 @@ public class Main extends Plugin {
         return checkrole;
     }
 
-    public String getRequiredRole() {
-        return requiredrole;
+    public String getRequiredRoleId() {
+        return requiredroleid;
     }
 
     public UserRecord getRegistered(String name) {

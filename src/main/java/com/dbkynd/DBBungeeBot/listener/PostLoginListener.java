@@ -46,7 +46,7 @@ public class PostLoginListener implements Listener {
                 // Get the guild role object
                 Role role = null;
                 for (Role r : guild.getRoles()) {
-                    if (r.getName().equalsIgnoreCase(plugin.getRequiredRole())) {
+                    if (r.getId().equals(plugin.getRequiredRoleId())) {
                         role = r;
                     }
                 }

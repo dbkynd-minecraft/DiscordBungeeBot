@@ -13,10 +13,10 @@ BotToken: discord_bot_token
 CommandPrefix: "!"
 AddMeCommand: addme
 
-# If CheckRole is true a joining player MUST have the RequiredRole to be able to join
+# If CheckRole is true a joining player MUST have the RequiredRoleId to be able to join
 # If CheckRole is false the player will still needs to be a member of the Discord to be able to join
 CheckRole: true
-RequiredRole: Twitch Subscriber
+RequiredRoleId: "12345678987654321"
 
 # The kick message displayed to a player that is not in the database and does not have bypass permissions
 KickMessage: You are either not a member of the Discord or have not yet verified your account!
