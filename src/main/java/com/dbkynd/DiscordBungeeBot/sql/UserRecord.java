@@ -1,4 +1,4 @@
-package com.dbkynd.DBBungeeBot.sql;
+package com.dbkynd.DiscordBungeeBot.sql;
 
 public class UserRecord {
     String discordid;

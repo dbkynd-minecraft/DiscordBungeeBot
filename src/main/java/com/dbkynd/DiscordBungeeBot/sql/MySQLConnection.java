@@ -1,6 +1,6 @@
-package com.dbkynd.DBBungeeBot.sql;
+package com.dbkynd.DiscordBungeeBot.sql;
 
-import com.dbkynd.DBBungeeBot.Main;
+import com.dbkynd.DiscordBungeeBot.DiscordBungeeBot;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ import java.util.logging.Level;
 
 public class MySQLConnection {
 
-    private Main plugin;
+    private com.dbkynd.DiscordBungeeBot.DiscordBungeeBot plugin;
 
     private Connection connection;
 
@@ -20,7 +20,7 @@ public class MySQLConnection {
     private String password;
     private String database;
 
-    public MySQLConnection(Main plugin, String sqlhost, String sqlport, String sqluser, String sqlpassword, String sqldatabase) {
+    public MySQLConnection(DiscordBungeeBot plugin, String sqlhost, String sqlport, String sqluser, String sqlpassword, String sqldatabase) {
         this.plugin = plugin;
         this.host = sqlhost;
         this.port = sqlport;

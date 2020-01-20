@@ -1,0 +1,6 @@
+name: DiscordBungeeBot
+main: com.dbkynd.DiscordBungeeBot.DiscordBungeeBot
+version: '${project.version}'
+api-version: "1.15"
+descripion: Discord role-based whitelisting system for BungeeCord.
+author: DBKynd

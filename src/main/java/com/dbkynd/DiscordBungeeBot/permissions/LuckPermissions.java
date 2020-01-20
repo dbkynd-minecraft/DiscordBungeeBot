@@ -1,4 +1,4 @@
-package com.dbkynd.DBBungeeBot.permissions;
+package com.dbkynd.DiscordBungeeBot.permissions;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;

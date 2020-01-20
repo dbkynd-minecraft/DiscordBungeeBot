@@ -1,7 +1,7 @@
-package com.dbkynd.DBBungeeBot;
+package com.dbkynd.DiscordBungeeBot;
 
-import com.dbkynd.DBBungeeBot.command.ReloadCommand;
-import com.dbkynd.DBBungeeBot.sql.UserRecord;
+import com.dbkynd.DiscordBungeeBot.command.ReloadCommand;
+import com.dbkynd.DiscordBungeeBot.sql.UserRecord;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -17,11 +17,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.dbkynd.DBBungeeBot.bot.ServerBot;
-import com.dbkynd.DBBungeeBot.sql.MySQLConnection;
-import com.dbkynd.DBBungeeBot.listener.PostLoginListener;
+import com.dbkynd.DiscordBungeeBot.bot.ServerBot;
+import com.dbkynd.DiscordBungeeBot.sql.MySQLConnection;
+import com.dbkynd.DiscordBungeeBot.listener.PostLoginListener;
+import org.bstats.bungeecord.Metrics;
 
-public class Main extends Plugin {
+public class DiscordBungeeBot extends Plugin {
 
     /* CONFIG.YML VARIABLES */
 
@@ -48,6 +49,8 @@ public class Main extends Plugin {
 
     @Override
     public void onEnable() {
+        Metrics metrics = new Metrics(this);
+
         // Load config.yml
         loadConfig();
 

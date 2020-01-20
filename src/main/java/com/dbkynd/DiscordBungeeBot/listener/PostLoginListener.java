@@ -1,8 +1,9 @@
-package com.dbkynd.DBBungeeBot.listener;
+package com.dbkynd.DiscordBungeeBot.listener;
 
-import com.dbkynd.DBBungeeBot.http.WebRequest;
-import com.dbkynd.DBBungeeBot.mojang.MojangJSON;
-import com.dbkynd.DBBungeeBot.sql.UserRecord;
+import com.dbkynd.DiscordBungeeBot.DiscordBungeeBot;
+import com.dbkynd.DiscordBungeeBot.http.WebRequest;
+import com.dbkynd.DiscordBungeeBot.mojang.MojangJSON;
+import com.dbkynd.DiscordBungeeBot.sql.UserRecord;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -15,16 +16,15 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.logging.Level;
 
-import com.dbkynd.DBBungeeBot.permissions.LuckPermissions;
-import com.dbkynd.DBBungeeBot.Main;
+import com.dbkynd.DiscordBungeeBot.permissions.LuckPermissions;
 
 public class PostLoginListener implements Listener {
 
-    Main plugin;
+    DiscordBungeeBot plugin;
     LuckPermissions luck = new LuckPermissions();
     WebRequest webRequest = new WebRequest();
 
-    public PostLoginListener(Main plugin) {
+    public PostLoginListener(DiscordBungeeBot plugin) {
         this.plugin = plugin;
     }
 

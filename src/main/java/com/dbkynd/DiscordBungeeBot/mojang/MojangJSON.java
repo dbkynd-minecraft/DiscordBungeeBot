@@ -1,4 +1,4 @@
-package com.dbkynd.DBBungeeBot.mojang;
+package com.dbkynd.DiscordBungeeBot.mojang;
 
 import java.util.UUID;
 

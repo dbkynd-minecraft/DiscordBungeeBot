@@ -1,10 +1,10 @@
-package com.dbkynd.DBBungeeBot.http;
+package com.dbkynd.DiscordBungeeBot.http;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import com.dbkynd.DBBungeeBot.mojang.MojangJSON;
+import com.dbkynd.DiscordBungeeBot.mojang.MojangJSON;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 

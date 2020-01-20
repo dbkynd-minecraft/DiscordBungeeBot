@@ -1,4 +1,4 @@
-package com.dbkynd.DBBungeeBot.http;
+package com.dbkynd.DiscordBungeeBot.http;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
